@@ -13,7 +13,7 @@ import (
 
 const (
 	// TOKEN telegram
-	TOKEN = "YOUR-TOKEN"
+	TOKEN = "904350232:AAHGK4iwOaKlr1ujT7FDdKeHLzYIwEQASVs"
 	// URL telegram
 	URL = "https://api.telegram.org/bot"
 	// PORT local
