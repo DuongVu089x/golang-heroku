@@ -1,9 +1,7 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/DuongVu089x/golang-heroku/model"
+	"github.com/labstack/echo"
 	"log"
 	"net/http"
 	"os"
@@ -17,48 +15,25 @@ const (
 	// URL telegram
 	URL = "https://api.telegram.org/bot"
 	// PORT local
+	// PORT = os.Getenv("PORT")
 )
 
-func update(w http.ResponseWriter, r *http.Request) {
-
-	message := &model.ReceiveMessage{}
-
-	chatID := 0
-	msgText := ""
-
-	err := json.NewDecoder(r.Body).Decode(&message)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	// if private or group
-	if message.Message.Chat.ID != 0 {
-		fmt.Println(message.Message.Chat.ID, message.Message.Text)
-		chatID = message.Message.Chat.ID
-		msgText = message.Message.Text
-	} else {
-		// if channel
-		fmt.Println(message.ChannelPost.Chat.ID, message.ChannelPost.Text)
-		chatID = message.ChannelPost.Chat.ID
-		msgText = message.ChannelPost.Text
-	}
-
-	respMsg := fmt.Sprintf("%s%s/sendMessage?chat_id=%d&text=Received: %s", URL, TOKEN, chatID, msgText)
-
-	// send echo resp
-	_, err = http.Get(respMsg)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
 func main() {
-	port :=  os.Getenv("PORT")
+	port := os.Getenv("PORT")
 
-	http.HandleFunc("/api/v1/update", update)
-
-	fmt.Println("Listenning on port", port, ".")
-	if err := http.ListenAndServe(":"+port, nil); err != nil {
-		log.Fatal(err)
+	if port == "" {
+		log.Fatal("$PORT must be set")
 	}
+
+	e := echo.New()
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Hello, World!")
+	})
+
+	e.POST("/demo", func(c echo.Context) error {
+		log.Print(c)
+		return c.String(http.StatusOK, "Hello, World!")
+	})
+	e.Logger.Fatal(e.Start(":"+port))
 }
+
