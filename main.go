@@ -23,7 +23,7 @@ const (
 var (
 	bot      *tgbotapi.BotAPI
 	botToken = "904350232:AAHGK4iwOaKlr1ujT7FDdKeHLzYIwEQASVs"
-	baseURL  = "https://<YOUR-APP-NAME>.herokuapp.com/"
+	baseURL  = "https://desolate-falls-71497.herokuapp.com/"
 )
 
 func main() {
