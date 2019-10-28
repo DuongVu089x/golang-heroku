@@ -2,6 +2,7 @@ package action
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/DuongVu089x/golang-heroku/config"
 	"github.com/labstack/echo"
 	tgbotapi "gopkg.in/telegram-bot-api.v4"
@@ -60,20 +61,7 @@ func handlerMessage(update *tgbotapi.Update) {
 		handlerSetToken(update.Message.Chat.ID, messageArr[1])
 		replyMessage = "Set token success"
 	case "count":
-		// Call api count history
-		resp, err := http.Get("http://35.247.150.56/pmq/v1/count?tableName=history")
-		if err != nil {
-			replyMessage = "Something wrong!"
-		}
-		defer resp.Body.Close()
-
-		body, err := ioutil.ReadAll(resp.Body)
-
-		if err != nil{
-			replyMessage = "Something wrong!"
-		}
-
-		replyMessage = string(body)
+		replyMessage = handlerCount(update.Message.Chat.ID)
 	default:
 		replyMessage = "Command isn't defined"
 	}
@@ -101,4 +89,38 @@ func showAllCommand()string{
 func handlerSetToken(id int64, token string) {
 	m := *config.UserToken
 	m[id] = token
+}
+
+func handlerCount(id int64) string {
+	var token string
+	m := *config.UserToken
+	for key, value := range m {
+		fmt.Println("Key:", key, "Value:", value)
+		if key == id {
+			token = value
+		}
+	}
+
+	if token == "" {
+		return "Token is required"
+	}
+
+	// Call api count history
+	req, err := http.NewRequest("GET","http://35.247.150.56/pmq/v1/count?tableName=history", nil)
+	if err != nil {
+		return "Something wrong!"
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer " + token)
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(body)
 }
