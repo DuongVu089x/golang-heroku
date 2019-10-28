@@ -18,6 +18,7 @@ func WebhookHandler(c echo.Context) error {
 	}
 
 	body := string(bodyBytes)
+	log.Println(body)
 
 	var update tgbotapi.Update
 	err := json.Unmarshal([]byte(body), &update)
