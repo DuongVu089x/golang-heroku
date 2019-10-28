@@ -45,20 +45,21 @@ func handlerMessage(update *tgbotapi.Update) {
 		return
 	}
 	message =  strings.ToLower(message)
+	messageArr := strings.Split(message, " ")
 
+	// Handler set token
 	var replyMessage string
-	//var resp *http.Response
-	switch message {
+	switch messageArr[0] {
 	case "/start":
 		replyMessage = "Type /help to more info"
-	case "/set-token":
-		// Handler set token
-		handlerSetToken();
 	case "/help":
 		// Show all command
 		replyMessage = showAllCommand()
-
-	case "count history":
+		return
+	case "/set-token":
+		handlerSetToken(update.Message.Chat.ID, messageArr[1])
+		replyMessage = "Set token success"
+	case "count":
 		// Call api count history
 		resp, err := http.Get("http://35.247.150.56/pmq/v1/count?tableName=history")
 		if err != nil {
@@ -97,6 +98,7 @@ func showAllCommand()string{
 		`
 }
 
-func handlerSetToken() {
-
+func handlerSetToken(id int64, token string) {
+	m := *config.UserToken
+	m[id] = token
 }

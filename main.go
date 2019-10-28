@@ -16,7 +16,9 @@ func main() {
 
 	port := os.Getenv("PORT")
 	config.Init()
+	userToken := make(map[int64] string)
 
+	config.UserToken = &userToken
 	if port == "" {
 		log.Fatal("$PORT must be set")
 	}
@@ -26,6 +28,7 @@ func main() {
 	if bot == nil {
 		return
 	}
+
 	e := echo.New()
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
