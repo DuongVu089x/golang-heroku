@@ -47,7 +47,7 @@ func handlerMessage(update *tgbotapi.Update) {
 	message =  strings.ToLower(message)
 
 	var replyMessage string
-	var resp *http.Response;
+	//var resp *http.Response
 	switch message {
 	case "/start":
 		replyMessage = "Type /help to more info"
