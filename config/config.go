@@ -2,7 +2,6 @@ package config
 
 import (
 	tgbotapi "gopkg.in/telegram-bot-api.v4"
-	"os"
 )
 
 type config struct {
@@ -17,7 +16,7 @@ var Bot *tgbotapi.BotAPI
 
 // Init config
 func Init() error {
-	env := os.Getenv("env")
+	env := "dev"
 
 	switch env {
 	case "dev":
