@@ -47,7 +47,7 @@ func handlerMessage(update *tgbotapi.Update) {
 	message =  strings.ToLower(message)
 
 	var replyMessage string
-
+	var resp *http.Response;
 	switch message {
 	case "/start":
 		replyMessage = "Type /help to more info"
@@ -60,13 +60,13 @@ func handlerMessage(update *tgbotapi.Update) {
 
 	case "count history":
 		// Call api count history
-		req, err := http.NewRequest("GET", "http://35.247.150.56/pmq/v1/count?tableName=history", nil)
+		resp, err := http.Get("http://35.247.150.56/pmq/v1/count?tableName=history")
 		if err != nil {
 			replyMessage = "Something wrong!"
 		}
-		defer req.Body.Close()
+		defer resp.Body.Close()
 
-		body, err := ioutil.ReadAll(req.Body)
+		body, err := ioutil.ReadAll(resp.Body)
 
 		if err != nil{
 			replyMessage = "Something wrong!"
