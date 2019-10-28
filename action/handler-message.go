@@ -104,9 +104,9 @@ func handlerCount(id int64) string {
 		}
 	}
 
-	if token == "" {
-		return "Token is required"
-	}
+	//if token == "" {
+	//	return "Token is required"
+	//}
 
 	// Call api count history
 	req, err := http.NewRequest("GET","http://35.247.150.56/pmq/v1/count?tableName=history", nil)
