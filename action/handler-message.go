@@ -7,6 +7,7 @@ import (
 	tgbotapi "gopkg.in/telegram-bot-api.v4"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"strings"
 )
 
@@ -48,14 +49,30 @@ func handlerMessage(update *tgbotapi.Update) {
 	var replyMessage string
 
 	switch message {
+	case "/start":
+		replyMessage = "Type /help to more info"
+	case "/set-token":
+		// Handler set token
+		handlerSetToken();
 	case "/help":
 		// Show all command
 		replyMessage = showAllCommand()
 
 	case "count history":
 		// Call api count history
-		//executeCountData(model.DBHistoryQueue, &replyMessage)
-		replyMessage = "0"
+		req, err := http.NewRequest("GET", "http://35.247.150.56/pmq/v1/count?tableName=history", nil)
+		if err != nil {
+			replyMessage = "Something wrong!"
+		}
+		defer req.Body.Close()
+
+		body, err := ioutil.ReadAll(req.Body)
+
+		if err != nil{
+			replyMessage = "Something wrong!"
+		}
+
+		replyMessage = string(body)
 	default:
 		replyMessage = "Command isn't defined"
 	}
@@ -80,3 +97,6 @@ func showAllCommand()string{
 		`
 }
 
+func handlerSetToken() {
+
+}
