@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/DuongVu089x/golang-heroku/action"
 	"github.com/DuongVu089x/golang-heroku/config"
 	"github.com/labstack/echo"
@@ -28,6 +29,8 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
+	fmt.Print(config.Bot.Token)
+	log.Print(config.Bot.Token)
 	e.POST("/"  + config.Bot.Token, action.WebhookHandler)
 	e.Logger.Fatal(e.Start(":"+port))
 }
