@@ -8,15 +8,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	//"gitlab.ghn.vn/common-projects/go-sdk/sdk"
-)
-
-const (
-	// TOKEN telegram
-	TOKEN = "904350232:AAHGK4iwOaKlr1ujT7FDdKeHLzYIwEQASVs"
-	// URL telegram
-	URL = "https://api.telegram.org/bot"
 )
 
 var (
@@ -78,15 +72,16 @@ func webhookHandler(c echo.Context) error {
 		return err
 	}
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-	msg.ReplyToMessageID = update.Message.MessageID
-
-	_, err = bot.Send(msg)
-
-	if err != nil {
-		log.Println(err)
-		return err
-	}
+	//msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
+	//msg.ReplyToMessageID = update.Message.MessageID
+	//
+	//_, err = bot.Send(msg)
+	//
+	//if err != nil {
+	//	log.Println(err)
+	//	return err
+	//}
+	handlerMessage(&update)
 
 	// to monitor changes run: heroku logs --tail
 	log.Printf("From: %+v Text: %+v\n", update.Message.From, update.Message.Text)
@@ -94,5 +89,28 @@ func webhookHandler(c echo.Context) error {
 }
 
 func handlerMessage(update *tgbotapi.Update) {
+	message := update.Message.Text
 
+	if message == "" {
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Command is required")
+		bot.Send(msg)
+		return
+	}
+	message =  strings.ToLower(message)
+
+	var replyMessage string
+
+	switch message {
+	case "history":
+		// Call api count history
+		//executeCountData(model.DBHistoryQueue, &replyMessage)
+		replyMessage = "0"
+	default:
+		replyMessage = "Collection is not found"
+	}
+
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, replyMessage)
+	bot.Send(msg)
+	return
 }
+
