@@ -28,7 +28,7 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
-	e.POST("/"  + config.Bot.Token, action.WebhookHandler)
+	e.POST("/", action.WebhookHandler)
 	e.Logger.Fatal(e.Start(":"+port))
 }
 
@@ -41,7 +41,7 @@ func initTelegram() {
 		return
 	}
 
-	url := config.Config.OutboundURL["base-url"] + config.Bot.Token
+	url := config.Config.OutboundURL["base-url"]
 	_, err = config.Bot.SetWebhook(tgbotapi.NewWebhook(url))
 	if err != nil {
 		log.Println(err)
