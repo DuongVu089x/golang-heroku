@@ -6,7 +6,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/gin-gonic/gin v1.4.0 // indirect
 	github.com/heroku/x v0.0.0-20171004170240-705849e307dd // indirect
-	github.com/labstack/echo v3.3.10+incompatible // indirect
+	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/manucorporat/sse v0.0.0-20150604091100-c142f0f1baea // indirect
 	github.com/mattn/go-colorable v0.1.4 // indirect
@@ -18,5 +18,5 @@ require (
 	golang.org/x/sys v0.0.0-20191025090151-53bf42e6b339 // indirect
 	golang.org/x/text v0.3.2 // indirect
 	gopkg.in/bluesuncorp/validator.v5 v5.9.1 // indirect
-	gopkg.in/telegram-bot-api.v4 v4.6.4 // indirect
+	gopkg.in/telegram-bot-api.v4 v4.6.4
 )

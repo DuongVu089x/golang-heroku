@@ -7,12 +7,11 @@ import (
 	"gopkg.in/telegram-bot-api.v4"
 	"log"
 	"net/http"
-	"os"
 )
 
 func main() {
 
-	port := os.Getenv("PORT")
+	port := "3000"
 
 	if port == "" {
 		log.Fatal("$PORT must be set")
@@ -24,7 +23,7 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
-	e.POST("/"  + config.Bot.Token, action.WebhookHandler)
+	e.POST("/"  + config.Config.Key["bot-token"], action.WebhookHandler)
 	e.Logger.Fatal(e.Start(":"+port))
 
 }
