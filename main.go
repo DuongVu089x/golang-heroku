@@ -7,11 +7,12 @@ import (
 	"gopkg.in/telegram-bot-api.v4"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
 
-	port := "3000"
+	port := os.Getenv("env")
 	config.Init()
 
 	if port == "" {
