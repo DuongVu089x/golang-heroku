@@ -8,12 +8,15 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
+var bot *tgbotapi.BotAPI
+
 func main() {
 
-	port := "3000"
+	port := os.Getenv("PORT")
 	config.Init()
 
 	if port == "" {
@@ -22,28 +25,28 @@ func main() {
 	// telegram
 	initTelegram()
 
-	if config.Bot == nil {
+	if bot == nil {
 		return
 	}
 	e := echo.New()
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
-	e.POST("/"  + config.Bot.Token, webhookHandler)
+	e.POST("/"  + bot.Token, webhookHandler)
 	e.Logger.Fatal(e.Start(":"+port))
 }
 
 func initTelegram() {
 	var err error
 
-	config.Bot, err = tgbotapi.NewBotAPI(config.Config.Key["bot-token"])
+	bot, err = tgbotapi.NewBotAPI(config.Config.Key["bot-token"])
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	url := config.Config.OutboundURL["base-url"] + config.Bot.Token
-	_, err = config.Bot.SetWebhook(tgbotapi.NewWebhook(url))
+	url := config.Config.OutboundURL["base-url"] + bot.Token
+	_, err = bot.SetWebhook(tgbotapi.NewWebhook(url))
 	if err != nil {
 		log.Println(err)
 	}
@@ -79,7 +82,7 @@ func handlerMessage(update *tgbotapi.Update) {
 
 	if message == "" {
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Command is required")
-		config.Bot.Send(msg)
+		bot.Send(msg)
 		return
 	}
 	message =  strings.ToLower(message)
@@ -102,7 +105,7 @@ func handlerMessage(update *tgbotapi.Update) {
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, replyMessage)
 	msg.ReplyToMessageID = update.Message.MessageID
 
-	config.Bot.Send(msg)
+	bot.Send(msg)
 	return
 }
 
