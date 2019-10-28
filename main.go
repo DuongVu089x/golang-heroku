@@ -1,22 +1,13 @@
 package main
 
 import (
-	"encoding/json"
+	"github.com/DuongVu089x/golang-heroku/action"
+	"github.com/DuongVu089x/golang-heroku/config"
 	"github.com/labstack/echo"
-	tgbotapi "gopkg.in/telegram-bot-api.v4"
-	"io/ioutil"
+	"gopkg.in/telegram-bot-api.v4"
 	"log"
 	"net/http"
 	"os"
-	"strings"
-
-	//"gitlab.ghn.vn/common-projects/go-sdk/sdk"
-)
-
-var (
-	bot      *tgbotapi.BotAPI
-	botToken = "904350232:AAHGK4iwOaKlr1ujT7FDdKeHLzYIwEQASVs"
-	baseURL  = "https://desolate-falls-71497.herokuapp.com/"
 )
 
 func main() {
@@ -30,10 +21,10 @@ func main() {
 	initTelegram()
 
 	e := echo.New()
-	e.POST("/"  + bot.Token, webhookHandler)
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
+	e.POST("/"  + config.Bot.Token, action.WebhookHandler)
 	e.Logger.Fatal(e.Start(":"+port))
 
 }
@@ -41,76 +32,16 @@ func main() {
 func initTelegram() {
 	var err error
 
-	bot, err = tgbotapi.NewBotAPI(botToken)
+	config.Bot, err = tgbotapi.NewBotAPI(config.Config.Key["bot-token"])
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	// this perhaps should be conditional on GetWebhookInfo()
-	// only set webhook if it is not set properly
-	url := baseURL + bot.Token
-	_, err = bot.SetWebhook(tgbotapi.NewWebhook(url))
+	url := config.Config.Key["base-url"] + config.Bot.Token
+	_, err = config.Bot.SetWebhook(tgbotapi.NewWebhook(url))
 	if err != nil {
 		log.Println(err)
 	}
-}
-
-func webhookHandler(c echo.Context) error {
-
-	var bodyBytes []byte
-	if c.Request().Body != nil {
-		bodyBytes, _ = ioutil.ReadAll(c.Request().Body)
-	}
-
-	body := string(bodyBytes)
-
-	var update tgbotapi.Update
-	err := json.Unmarshal([]byte(body), &update)
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-
-	//msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-	//msg.ReplyToMessageID = update.Message.MessageID
-	//
-	//_, err = bot.Send(msg)
-	//
-	//if err != nil {
-	//	log.Println(err)
-	//	return err
-	//}
-	handlerMessage(&update)
-
-	// to monitor changes run: heroku logs --tail
-	log.Printf("From: %+v Text: %+v\n", update.Message.From, update.Message.Text)
-	return nil
-}
-
-func handlerMessage(update *tgbotapi.Update) {
-	message := update.Message.Text
-
-	if message == "" {
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Command is required")
-		bot.Send(msg)
-		return
-	}
-	message =  strings.ToLower(message)
-
-	var replyMessage string
-
-	switch message {
-	case "history":
-		// Call api count history
-		//executeCountData(model.DBHistoryQueue, &replyMessage)
-		replyMessage = "0"
-	default:
-		replyMessage = "Collection is not found"
-	}
-
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, replyMessage)
-	bot.Send(msg)
-	return
 }
 
