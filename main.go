@@ -30,7 +30,6 @@ func main() {
 	})
 	e.POST("/"  + config.Bot.Token, action.WebhookHandler)
 	e.Logger.Fatal(e.Start(":"+port))
-
 }
 
 func initTelegram() {
