@@ -3,9 +3,11 @@ package main
 import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo"
 	tgbotapi "gopkg.in/telegram-bot-api.v4"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 
 	//"gitlab.ghn.vn/common-projects/go-sdk/sdk"
@@ -27,41 +29,24 @@ var (
 )
 
 func main() {
-	//port := os.Getenv("PORT")
-	//
-	//if port == "" {
-	//	log.Fatal("$PORT must be set")
-	//}
-	//
-	//e := echo.New()
-	//e.GET("/", func(c echo.Context) error {
-	//	return c.String(http.StatusOK, "Hello, World!")
-	//})
-	//
-	//e.POST("/demo", func(c echo.Context) error {
-	//	log.Print(c)
-	//	return c.String(http.StatusOK, "Hello, World!")
-	//})
-	//e.Logger.Fatal(e.Start(":"+port))
 
 	port := os.Getenv("PORT")
 
 	if port == "" {
 		log.Fatal("$PORT must be set")
 	}
-
-	// gin router
-	router := gin.New()
-	router.Use(gin.Logger())
-
 	// telegram
 	initTelegram()
-	router.POST("/" + bot.Token, webhookHandler)
+	//router.POST("/" + bot.Token, webhookHandler)
+	//
+	//err := router.Run(":" + port)
+	//if err != nil {
+	//	log.Println(err)
+	//}
 
-	err := router.Run(":" + port)
-	if err != nil {
-		log.Println(err)
-	}
+	e := echo.New()
+	e.POST("/" + bot.Token, webhookHandler)
+	e.Logger.Fatal(e.Start(":1323"))
 }
 
 func initTelegram() {
@@ -82,22 +67,23 @@ func initTelegram() {
 	}
 }
 
-func webhookHandler(c *gin.Context) {
-	defer c.Request.Body.Close()
+func webhookHandler(c echo.Context) error {
 
-	bytes, err := ioutil.ReadAll(c.Request.Body)
-	if err != nil {
-		log.Println(err)
-		return
+	var bodyBytes []byte
+	if c.Request().Body != nil {
+		bodyBytes, _ = ioutil.ReadAll(c.Request().Body)
 	}
 
+	body := string(bodyBytes)
+
 	var update tgbotapi.Update
-	err = json.Unmarshal(bytes, &update)
+	err := json.Unmarshal([]byte(body), &update)
 	if err != nil {
 		log.Println(err)
-		return
+		return err
 	}
 
 	// to monitor changes run: heroku logs --tail
 	log.Printf("From: %+v Text: %+v\n", update.Message.From, update.Message.Text)
+	return nil
 }
