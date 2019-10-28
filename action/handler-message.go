@@ -89,6 +89,7 @@ func showAllCommand()string{
 func handlerSetToken(id int64, token string) {
 	m := *config.UserToken
 	m[id] = token
+	fmt.Println("Token: " + token)
 }
 
 func handlerCount(id int64) string {
