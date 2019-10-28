@@ -78,7 +78,21 @@ func webhookHandler(c echo.Context) error {
 		return err
 	}
 
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
+	msg.ReplyToMessageID = update.Message.MessageID
+
+	_, err = bot.Send(msg)
+
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
 	// to monitor changes run: heroku logs --tail
 	log.Printf("From: %+v Text: %+v\n", update.Message.From, update.Message.Text)
 	return nil
+}
+
+func handlerMessage(update *tgbotapi.Update) {
+
 }
