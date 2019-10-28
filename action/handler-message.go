@@ -114,7 +114,7 @@ func handlerCount(id int64) string {
 		return "Something wrong!"
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer" + token)
+	req.Header.Set("Authorization", "Bearer " + token)
 	fmt.Println("req: " + req.Header.Get("Authorization"))
 
 	resp, err := http.DefaultClient.Do(req)
