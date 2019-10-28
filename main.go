@@ -2,12 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/gin-gonic/gin"
 	"github.com/labstack/echo"
 	tgbotapi "gopkg.in/telegram-bot-api.v4"
 	"io/ioutil"
 	"log"
-	"net/http"
 	"os"
 
 	//"gitlab.ghn.vn/common-projects/go-sdk/sdk"
