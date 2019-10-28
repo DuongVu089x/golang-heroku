@@ -6,6 +6,7 @@ import (
 	tgbotapi "gopkg.in/telegram-bot-api.v4"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 
 	//"gitlab.ghn.vn/common-projects/go-sdk/sdk"
@@ -16,8 +17,6 @@ const (
 	TOKEN = "904350232:AAHGK4iwOaKlr1ujT7FDdKeHLzYIwEQASVs"
 	// URL telegram
 	URL = "https://api.telegram.org/bot"
-	// PORT local
-	// PORT = os.Getenv("PORT")
 )
 
 var (
@@ -35,16 +34,14 @@ func main() {
 	}
 	// telegram
 	initTelegram()
-	//router.POST("/" + bot.Token, webhookHandler)
-	//
-	//err := router.Run(":" + port)
-	//if err != nil {
-	//	log.Println(err)
-	//}
 
 	e := echo.New()
-	e.POST("/" + bot.Token, webhookHandler)
+	e.POST("/"  + bot.Token, webhookHandler)
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Hello, World!")
+	})
 	e.Logger.Fatal(e.Start(":1323"))
+
 }
 
 func initTelegram() {
