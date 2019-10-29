@@ -16,9 +16,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	config.Init()
-	userToken := make(map[int64] string)
 
-	config.UserToken = &userToken
 	if port == "" {
 		log.Fatal("$PORT must be set")
 	}
@@ -35,6 +33,10 @@ func main() {
 	})
 	e.POST("/"  + bot.Token, action.WebhookHandler)
 	e.Logger.Fatal(e.Start(":"+port))
+
+	//basicTokenStr := fmt.Sprintf("%s:%s", "backend", "2HZPYops1XiIJigkZ1Odfk1NGt1ugO3A")
+	//basicToken := base64.URLEncoding.EncodeToString([]byte(basicTokenStr))
+	//fmt.Println(basicToken)
 }
 
 func initTelegram() {

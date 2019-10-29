@@ -14,7 +14,6 @@ type config struct {
 // Config main config object
 var Config config
 var Bot *tgbotapi.BotAPI
-var UserToken *map[int64]string
 
 // Init config
 func Init() error {
@@ -24,12 +23,13 @@ func Init() error {
 	case "dev":
 		Config = config{
 			OutboundURL: map[string]string{
-				"base-url": "https://desolate-falls-71497.herokuapp.com/",
-				"pmq-count":"http://35.247.150.56/pmq/v1/count?tableName=",
+				"base-url":  "https://desolate-falls-71497.herokuapp.com/",
+				"pmq-count": "http://35.247.150.56/pmq/v1/count?tableName=",
 			},
 
 			Key: map[string]string{
-				"bot-token": "904350232:AAHGK4iwOaKlr1ujT7FDdKeHLzYIwEQASVs",
+				"bot-token":   "904350232:AAHGK4iwOaKlr1ujT7FDdKeHLzYIwEQASVs",
+				"basic-token": "YmFja2VuZDoySFpQWW9wczFYaUlKaWdrWjFPZGZrMU5HdDF1Z08zQQ==",
 			},
 		}
 	}

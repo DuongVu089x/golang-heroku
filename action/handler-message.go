@@ -29,8 +29,6 @@ func WebhookHandler(c echo.Context) error {
 	}
 
 	handlerMessage(&update)
-
-	// to monitor changes run: heroku logs --tail
 	return nil
 }
 
@@ -48,7 +46,6 @@ func handlerMessage(update *tgbotapi.Update) {
 		config.Bot.Send(msg)
 		return
 	}
-	//message =  strings.ToLower(message)
 	messageArr := strings.Split(message, " ")
 	messageArr[0] = strings.ToLower(messageArr[0])
 
@@ -60,11 +57,11 @@ func handlerMessage(update *tgbotapi.Update) {
 	case "/help":
 		// Show all command
 		replyMessage = showAllCommand()
-	case "/set-token":
-		handlerSetToken(update.Message.Chat.ID, messageArr[1])
-		replyMessage = "Set token success"
+	//case "/set-token":
+	//	handlerSetToken(update.Message.Chat.ID, messageArr[1])
+	//	replyMessage = "Set token success"
 	case "/count":
-		replyMessage = handlerCount(update.Message.Chat.ID, messageArr[1])
+		replyMessage = handlerCount(messageArr[1])
 	default:
 		replyMessage = "Command isn't defined"
 	}
@@ -86,43 +83,22 @@ func showAllCommand() string{
 				+ pptl-history
 				+ transport-package
 				+ update-warehouse
-			- /set-token: set current token login
 		`
 }
 
-func handlerSetToken(id int64, token string) {
-	m := *config.UserToken
-	m[id] = token
-}
+//func handlerSetToken(id int64, token string) {
+//	m := *config.UserToken
+//	m[id] = token
+//}
 
-func handlerCount(id int64, tableName string) string {
-
-	// Get token from cache
-	var token string
-	m := *config.UserToken
-	for key, value := range m {
-		if key == id {
-			token = value
-			break
-		}
-	}
-
-	// Check token
-	if token == "" {
-		return "Not found token!"
-	}
-
-	return makeRequest(&token, &tableName)
-}
-
-func makeRequest(token, tableName *string) string{
+func handlerCount(tableName string) string {
 	// Call api count history
-	req, err := http.NewRequest("GET", config.Config.OutboundURL["pmq-count"] + *tableName, nil)
+	req, err := http.NewRequest("GET", config.Config.OutboundURL["pmq-count"] + tableName, nil)
 	if err != nil {
 		return "Some error!"
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer " + *token)
+	req.Header.Set("Authorization", "Basic " + config.Config.Key["basic-token"] )
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -134,4 +110,5 @@ func makeRequest(token, tableName *string) string{
 		log.Fatal(err)
 	}
 	return string(body)
+
 }
