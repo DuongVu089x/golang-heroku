@@ -63,7 +63,7 @@ func handlerMessage(update *tgbotapi.Update) {
 	case "/set-token":
 		handlerSetToken(update.Message.Chat.ID, messageArr[1])
 		replyMessage = "Set token success"
-	case "count":
+	case "/count":
 		replyMessage = handlerCount(update.Message.Chat.ID, messageArr[1])
 	default:
 		replyMessage = "Command isn't defined"
