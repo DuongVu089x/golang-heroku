@@ -60,7 +60,7 @@ func handlerMessage(update *tgbotapi.Update) {
 	case "/set-token":
 		fmt.Println(messageArr)
 		fmt.Println(messageArr[1])
-		handlerSetToken(update.Message.Chat.ID, &messageArr[1])
+		handlerSetToken(update.Message.Chat.ID, messageArr[1])
 		replyMessage = "Set token success"
 	case "count":
 		replyMessage = handlerCount(update.Message.Chat.ID)
@@ -88,10 +88,10 @@ func showAllCommand()string{
 		`
 }
 
-func handlerSetToken(id int64, token *string) {
+func handlerSetToken(id int64, token string) {
 	m := *config.UserToken
-	m[id] = *token
-	fmt.Println("Token: " + *token)
+	m[id] = token
+	fmt.Println("Token: " + token)
 }
 
 func handlerCount(id int64) string {
