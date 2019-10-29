@@ -38,6 +38,10 @@ func WebhookHandler(c echo.Context) error {
 
 
 func handlerMessage(update *tgbotapi.Update) {
+	if update != nil && update.Message != nil {
+		return
+	}
+
 	message := update.Message.Text
 
 	if message == "" {
