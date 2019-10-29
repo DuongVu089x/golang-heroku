@@ -129,7 +129,6 @@ func handlerSetAuto(id int64) {
 			case <- ticker.C:
 				msg := tgbotapi.NewMessage(616257809, time.Now().String())
 				config.Bot.Send(msg)
-				return
 			case <- quit:
 				ticker.Stop()
 				return
