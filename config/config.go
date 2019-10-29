@@ -14,6 +14,7 @@ type config struct {
 // Config main config object
 var Config config
 var Bot *tgbotapi.BotAPI
+var UserChanel *map[int64]*chan struct{}
 
 // Init config
 func Init() error {

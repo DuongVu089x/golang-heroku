@@ -17,6 +17,9 @@ func main() {
 	port := os.Getenv("PORT")
 	config.Init()
 
+	userChanel := make(map[int64]*chan struct{})
+	config.UserChanel = &userChanel
+
 	if port == "" {
 		log.Fatal("$PORT must be set")
 	}

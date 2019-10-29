@@ -62,10 +62,9 @@ func handlerMessage(update *tgbotapi.Update) {
 	case "/count":
 		replyMessage = handlerCount(messageArr[1])
 	case "/set-auto":
-		handlerSetAuto(update.Message.Chat.ID)
-		return
+		replyMessage = handlerSetAuto(update.Message.Chat.ID)
 	case "/quit-auto":
-		handlerQuitAuto()
+		replyMessage = handlerQuitAuto(update.Message.Chat.ID)
 		return
 	default:
 		replyMessage = "Command isn't defined"
@@ -89,6 +88,8 @@ func showAllCommand() string{
 				+ pptl-history
 				+ transport-package
 				+ update-warehouse
+			- set-auto: Auto count record in DB queue
+			- quit-auto: Quit auto count record in DB queue
 		`
 }
 
@@ -115,14 +116,14 @@ func handlerCount(tableName string) string {
 
 }
 
-var chanel *chan struct{}
-
 // handlerSetAuto...
-func handlerSetAuto(id int64) {
+func handlerSetAuto(id int64) string {
 
 	ticker := time.NewTicker(5 * time.Second)
 	quit := make(chan struct{})
-	chanel = &quit
+	//chanel = &quit
+
+	(*config.UserChanel)[id] = &quit
 	go func() {
 		for {
 			select {
@@ -135,9 +136,15 @@ func handlerSetAuto(id int64) {
 			}
 		}
 	}()
+	return "Success"
 }
 
 // handlerQuitAuto...
-func handlerQuitAuto() {
-	close(*(chanel))
+func handlerQuitAuto(id int64) string {
+	chanel := (*config.UserChanel)[id]
+	if chanel != nil {
+		close(*(chanel))
+		return "Success"
+	}
+	return "Error"
 }
