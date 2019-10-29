@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 )
 
 // WebhookHandler...
@@ -60,6 +61,12 @@ func handlerMessage(update *tgbotapi.Update) {
 		replyMessage = showAllCommand()
 	case "/count":
 		replyMessage = handlerCount(messageArr[1])
+	case "/set-auto":
+		handlerSetAuto(update.Message.Chat.ID)
+		return
+	case "/quit-auto":
+		handlerQuitAuto()
+		return
 	default:
 		replyMessage = "Command isn't defined"
 	}
@@ -106,4 +113,32 @@ func handlerCount(tableName string) string {
 	}
 	return string(body)
 
+}
+
+var chanel *chan struct{}
+
+// handlerSetAuto...
+func handlerSetAuto(id int64) {
+
+	ticker := time.NewTicker(5 * time.Second)
+	quit := make(chan struct{})
+	chanel = &quit
+	go func() {
+		for {
+			select {
+			case <- ticker.C:
+				msg := tgbotapi.NewMessage(616257809, time.Now().String())
+				config.Bot.Send(msg)
+				return
+			case <- quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+}
+
+// handlerQuitAuto...
+func handlerQuitAuto() {
+	close(*(chanel))
 }
