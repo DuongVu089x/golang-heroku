@@ -60,7 +60,6 @@ func handlerMessage(update *tgbotapi.Update) {
 	case "/help":
 		// Show all command
 		replyMessage = showAllCommand()
-		return
 	case "/set-token":
 		handlerSetToken(update.Message.Chat.ID, messageArr[1])
 		replyMessage = "Set token success"
@@ -77,7 +76,7 @@ func handlerMessage(update *tgbotapi.Update) {
 	return
 }
 
-func showAllCommand()string{
+func showAllCommand() string{
 	return `
 			- /count {db}
 				+ history
