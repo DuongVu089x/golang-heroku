@@ -11,6 +11,7 @@ import (
 	"strings"
 )
 
+// WebhookHandler...
 func WebhookHandler(c echo.Context) error {
 
 	var bodyBytes []byte
@@ -32,7 +33,7 @@ func WebhookHandler(c echo.Context) error {
 	return nil
 }
 
-
+// handlerMessage...
 func handlerMessage(update *tgbotapi.Update) {
 	if update == nil || update.Message == nil {
 		return
@@ -57,9 +58,6 @@ func handlerMessage(update *tgbotapi.Update) {
 	case "/help":
 		// Show all command
 		replyMessage = showAllCommand()
-	//case "/set-token":
-	//	handlerSetToken(update.Message.Chat.ID, messageArr[1])
-	//	replyMessage = "Set token success"
 	case "/count":
 		replyMessage = handlerCount(messageArr[1])
 	default:
@@ -73,6 +71,7 @@ func handlerMessage(update *tgbotapi.Update) {
 	return
 }
 
+// showAllCommand...
 func showAllCommand() string{
 	return `
 			- /count {db}
@@ -86,11 +85,7 @@ func showAllCommand() string{
 		`
 }
 
-//func handlerSetToken(id int64, token string) {
-//	m := *config.UserToken
-//	m[id] = token
-//}
-
+// handlerCount...
 func handlerCount(tableName string) string {
 	// Call api count history
 	req, err := http.NewRequest("GET", config.Config.OutboundURL["pmq-count"] + tableName, nil)
