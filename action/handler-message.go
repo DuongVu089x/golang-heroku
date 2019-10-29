@@ -79,7 +79,7 @@ func handlerMessage(update *tgbotapi.Update) {
 
 func showAllCommand()string{
 	return `
-			- count {db}
+			- /count {db}
 				+ history
 				+ oms
 				+ oos
@@ -87,7 +87,7 @@ func showAllCommand()string{
 				+ pptl-history
 				+ transport-package
 				+ update-warehouse
-			-/set-token: set current token login
+			- /set-token: set current token login
 		`
 }
 
