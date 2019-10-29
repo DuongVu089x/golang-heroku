@@ -32,7 +32,7 @@ func WebhookHandler(c echo.Context) error {
 	handlerMessage(&update)
 
 	// to monitor changes run: heroku logs --tail
-	log.Printf("From: %+v Text: %+v\n", update.Message.From, update.Message.Text)
+	// log.Printf("From: %+v Text: %+v\n", update.Message.From, update.Message.Text)
 	return nil
 }
 
@@ -49,8 +49,9 @@ func handlerMessage(update *tgbotapi.Update) {
 		config.Bot.Send(msg)
 		return
 	}
-	message =  strings.ToLower(message)
+	//message =  strings.ToLower(message)
 	messageArr := strings.Split(message, " ")
+	messageArr[0] = strings.ToLower(messageArr[0])
 
 	// Handler set token
 	var replyMessage string
