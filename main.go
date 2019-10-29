@@ -33,10 +33,6 @@ func main() {
 	})
 	e.POST("/"  + bot.Token, action.WebhookHandler)
 	e.Logger.Fatal(e.Start(":"+port))
-
-	//basicTokenStr := fmt.Sprintf("%s:%s", "backend", "2HZPYops1XiIJigkZ1Odfk1NGt1ugO3A")
-	//basicToken := base64.URLEncoding.EncodeToString([]byte(basicTokenStr))
-	//fmt.Println(basicToken)
 }
 
 func initTelegram() {
